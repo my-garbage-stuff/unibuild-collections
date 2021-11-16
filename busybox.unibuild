@@ -1,0 +1,19 @@
+#!/bin/bash
+name="busybox"
+if [[ $TARGET == "debian" ]] ; then
+    version="1:1.34.1"
+else
+    version="1.34.1"
+fi
+summary="busybox toolkit"
+description="$summary"
+source=(https://www.busybox.net/downloads/busybox-1.34.1.tar.bz2)
+
+_build(){
+    make defconfig
+    sed -i '/# CONFIG_STATIC is not set/c\CONFIG_STATIC=y' .config
+    make -j$(nproc)
+}
+_install(){
+     install -Dm0755 busybox "$INSTALLDIR"/usr/bin/busybox
+}
